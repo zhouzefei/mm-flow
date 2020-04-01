@@ -1,17 +1,24 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import MMEditor from "@tntd/mm-editor";
+import ContextMenu from "./Components/ContextMenu";
+import ItemPanel from "./Components/ItemPanel";
+import Item from "./Components/Item";
+import ToolBar from "./Components/ToolBar";
+import Flow from "./Components/Flow";
+import Command from "./Components/Command";
+import NodeDetail from "./Components/NodeDetail";
+import LineDetail from "./Components/LineDetail";
+import "./index.less";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+export {
+    ToolBar,
+    ItemPanel,
+    Item,
+    ContextMenu,
+    Flow,
+    Command,
+    LineDetail,
+    NodeDetail
+};
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+export default MMEditor;
+  
