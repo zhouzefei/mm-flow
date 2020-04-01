@@ -4,5 +4,6 @@ export const toolBarTypeNameMap = {
     "zoom-in":"放大",
     "zoom-out":"缩小",
     "fullscreen":"适应画布",
-    "fullscreen-exit":"实际尺寸"
+    "fullscreen-exit":"实际尺寸",
+    "eye":"预览"
 }

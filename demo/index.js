@@ -1,16 +1,17 @@
 import { PureComponent, Fragment } from "react";
 import { Row, Button, message } from "antd";
-import { FLOW_ITEM } from "../Constants/ItemMap";
-import { Flow, ToolBar, ItemPanel, Item, Command } from "../index";
+import { FLOW_ITEM } from "./ItemMap";
+import { Flow, ToolBar, ItemPanel, Item, Command } from "../src/MMFlow";
 import Audit from "./FlowDetail/Audit";
 import Base from "./FlowDetail/Base";
 import Line from "./FlowDetail/Line";
-import { data } from "./data";
+import { data, auditedNodes } from "./data";
 import "./index.less"
 
 export default class Demo extends PureComponent{
     state={
-        editor: null
+        editor: null,
+        auditedNodesData: null
     }
 
     componentDidMount(){
@@ -165,9 +166,21 @@ export default class Demo extends PureComponent{
         const flowData = this.handleFlowData({data, editor});
         console.log(JSON.stringify(flowData))
     }
+    init = () => {
+       
+    }
+    // 预览
+    preview = () => {
+        this.setState({
+            auditedNodesData: auditedNodes
+        },()=>{
+            this.editorRef.runFlow()
+        })
+    }
     render(){
-        const { editor } = this.state;
+        const { editor, auditedNodesData } = this.state;
         const { disabled } = this.props;
+        console.log(auditedNodesData)
         return (
             <Row
                 type="flex"
@@ -191,7 +204,10 @@ export default class Demo extends PureComponent{
                         <ToolBar editor={editor}  style={{ type:"flex", justify:"space-between", align:"middle" }}>
                             <Command 
                                 types={
-                                    ["redo","undo","zoom-in","zoom-out","fullscreen","fullscreen-exit"]
+                                    ["redo","undo","zoom-in","zoom-out","fullscreen","fullscreen-exit",{
+                                        type:"eye",
+                                        click:this.preview
+                                    }]
                                 }
                             />
                             <Button type="primary" onClick={this.save}>保存</Button>
@@ -219,6 +235,8 @@ export default class Demo extends PureComponent{
                         lineComponents={{
                             "line": Line
                         }}
+                        // animate={()=>{}}
+                        auditedNodes={auditedNodesData}
                     />
                 </div>
             </Row>

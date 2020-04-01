@@ -44,8 +44,19 @@ export default class Flow extends PureComponent {
 				node,
 				fromNodes
 			})
-        });
-        
+		});
+		
+		this.editor.graph.on("delete",()=>{
+			this.rightbarNode.setState({
+				activeNode: {},
+				fromNodes:null
+			});
+			this.rightbarLine.setState({
+				activeLine: {}
+			});
+		})
+		
+
     	// 选中线条
     	this.editor.graph.on("line:click", ({ line }) => {
 			const { lineNeedConfig } = this.props;
@@ -122,6 +133,10 @@ export default class Flow extends PureComponent {
 				this.rightbarLine.setState({
 					activeLine: line.data
 				});
+			}
+			const { auditedNodes } = this.props;
+			if(auditedNodes && auditedNodes.length>0){
+				this.runFlow();
 			}
 		}, 0);
 	}
@@ -270,7 +285,7 @@ export default class Flow extends PureComponent {
 	}
 
     componentDidMount(){
-        const { mode, data, checkNewLine, init } = this.props;
+        const { mode, data, checkNewLine, init, auditedNodes } = this.props;
 		this.editor = new MMEditor({ dom: this.editorRef, mode });
 		this.initEditorShape();
         if(checkNewLine){
@@ -278,10 +293,125 @@ export default class Flow extends PureComponent {
 		}
 		init && init();
         if(data){
-			console.log(data);
             this.editor.schema.setInitData(data); // 初始值
         }
 		this.addEditorEvent();
+		if(auditedNodes && auditedNodes.length>0){
+			this.runFlow();
+		}
+	}
+	
+	// 默认动画效果
+	defaultAnimate = () => {
+		const { auditedNodes } = this.props;
+    	const {
+    		editor: {
+    			graph: { node, line }
+    		}
+    	} = this;
+    	const { lines } = line;
+    	const { nodes } = node;
+		this.editor.repaint();
+		const hasAuditedNodeUuids = [];
+		auditedNodes.forEach(node=>{
+			hasAuditedNodeUuids.push(node.uuid);
+		})
+    	auditedNodes.forEach((hasAudited)=>{
+    		const { uuid } = hasAudited || {};
+    		let status = "success instance";
+    		switch (hasAudited.status) {
+    			case 1: status = "running instance"; break;
+    			case 4: status = "error instance"; break;
+    			case 3: status = "reject instance"; break;
+    			default:status = "success instance"; break;
+			}
+    		Object.values(lines).forEach(line=>{
+    			if (uuid === line.data.to && hasAuditedNodeUuids.indexOf(line.data.from) > -1) {
+    				line.addClass(status);
+    				if (status.indexOf("running") > -1) {
+    					this.updateRunningLine(line);
+    				}
+    			}
+    		});
+    		Object.values(nodes).forEach(node=>{
+    			if (node.data.uuid === uuid) {
+    				let iconClass = "";
+    				if (hasAudited.status === 4) {
+    					iconClass = "catch-icon";
+    				}
+    				if (hasAudited.status === 3) {
+    					iconClass = "reject-icon";
+    				}
+    				if (iconClass) {
+    					const { width: rectW } = node.select("rect").node.getBBox();
+    					const obj = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");
+    					obj.innerHTML = `<span xmlns="http://www.w3.org/1999/xhtml" class="${iconClass}"></span>`;
+    					const icon = window.Snap(obj);
+    					icon.attr({
+    						width: 24,
+    						height: 24,
+    						x: rectW - 18 + 4,
+    						y: 8
+    					});
+    					node.shape.add(icon);
+    					node.shape.errorIcon = icon;
+    					node.select("rect").node.setAttribute("width", Math.max(rectW + 28, 108));
+    					node.linkPoints.forEach(circle => {
+    						this.editor.graph.node.shapes[node.data.type || "default"].updateLinkPoint(node, circle, true);
+    					});
+					}
+					this.editor.graph.line.updateByNode(node);
+    				node.addClass(status);
+    			}
+    		});
+    	});
+	}
+
+	// 开启查看动画模式
+	runFlow = () => {
+    	if (this.watchHistoryTimeout) {
+    		clearTimeout(this.watchHistoryTimeout);
+    	}
+		const { animate } = this.props;
+		if(animate){
+			animate();
+		}else{
+			this.defaultAnimate()
+		}
+    }
+    // 更新线状态
+    updateRunningLine(line) {
+    	let length = line.shape.getTotalLength();
+    	if (!line.hasClass("running")) {
+    		this.props.editor.graph.line.updateLine(line.data.uuid);
+    		return;
+    	}
+    	let lineAnimate = window.Snap.animate(
+    		0,
+    		length,
+    		val => {
+    			if (line.arrow) {
+    				const coord = line.shape.getPointAtLength(val);
+    				const matrix = new window.Snap.Matrix();
+    				matrix.translate(coord.x, coord.y);
+    				matrix.rotate(coord.alpha + line.arrow.angle + 90, 0, 0);
+    				line.arrow.attr({
+    					transform: matrix.toTransformString()
+    				});
+    			}
+    		},
+    		length * 20,
+    		() => {
+    			if (line.arrow) {
+    				this.updateRunningLine(line);
+    			} else {
+    				if (lineAnimate) {
+    					lineAnimate.stop();
+    					lineAnimate = null;
+    				}
+    			}
+    		}
+    	);
     }
     render() {
 		const { className, disabled, nodeComponents, lineComponents, changeNode, changeLine, needRemoveError=true } = this.props;

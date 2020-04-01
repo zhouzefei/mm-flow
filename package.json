@@ -1,7 +1,7 @@
 {
   "name": "mm-flow",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.1.1",
+  "main": "./dist/MMFlow.js",
   "dependencies": {
     "@tntd/mm-editor": "^1.2.10",
     "antd": "^3.26.14",
@@ -12,9 +12,8 @@
     "react-dom": "^16.13.1"
   },
   "scripts": {
-    "start": "webpack-dev-server --open --config build/webpack.dev.js",
-    "dev": "webpack-dev-server --open --config build/webpack.dev.js",
-    "build": "webpack --config build/webpack.prod.js"
+    "start": "webpack-dev-server",
+		"build": "webpack --config webpack.config.build.js"
   },
   "eslintConfig": {
     "extends": "eslint-config-tdued"
@@ -64,5 +63,7 @@
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3",
     "webpack-merge": "^4.2.2"
-  }
+  },
+  "author": "zefei",
+	"license": "ISC"
 }

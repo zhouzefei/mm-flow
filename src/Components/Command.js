@@ -109,12 +109,16 @@ export default class Command extends PureComponent {
         types && 
         types.length>0 && 
         types.forEach(type=>{
+			let click = null
+			if(typeof type === "object"){
+				({type, click}=type)
+			}
 			if(type){
 				child.push(
 					<Tooltip title={toolBarTypeNameMap[type]} key={type}>
 						<Icon
 							type={type}
-							onClick={this.clickEvent(type)}
+							onClick={click || this.clickEvent(type)}
 							className={this.getClassName(type)}
 						/>
 					</Tooltip>

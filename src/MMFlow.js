@@ -19,6 +19,4 @@ export {
     LineDetail,
     NodeDetail
 };
-
-export default MMEditor;
   
