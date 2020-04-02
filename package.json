@@ -3,7 +3,7 @@
   "version": "0.1.2",
   "main": "./dist/MMFlow.js",
   "dependencies": {
-    "@tntd/mm-editor": "^1.2.11",
+    "@tntd/mm-editor": "^1.2.13",
     "antd": "^3.26.14",
     "dagre": "^0.8.5",
     "events": "^3.1.0",

@@ -201,6 +201,7 @@ export default class Flow extends PureComponent {
 					let [icon, iconW] = [null, 0];
 					if (iconPath) {
 						icon = snapPaper.image(iconPath, 12, 8, 24, 24);
+						icon.node.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
 						iconW = icon.getBBox().w;
 					}
 					const spacePad = 18; // 左右两边留白距离
@@ -238,6 +239,7 @@ export default class Flow extends PureComponent {
 			{
 				render: (data, snapPaper) => {
 					const image = snapPaper.image(FlowExclusivity, 0, 0, 78, 72);
+					image.node.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
 					const text = snapPaper.text(39, 36, data.name);
 					text.attr({
 						fill: "#333"
@@ -255,6 +257,7 @@ export default class Flow extends PureComponent {
 			{
 				render: (data, snapPaper) => {
 					const image = snapPaper.image(FlowParallel, 0, 0, 78, 72);
+					image.node.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
 					const text = snapPaper.text(39, 36, data.name);
 					text.attr({
 						fill: "#333"
@@ -272,6 +275,7 @@ export default class Flow extends PureComponent {
 			{
 				render: (data, snapPaper) => {
 					const image = snapPaper.image(FlowDecide, 0, 0, 78, 72);
+					image.node.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
 					const text = snapPaper.text(39, 36, data.name);
 					text.attr({
 						fill: "#333"
@@ -286,7 +290,7 @@ export default class Flow extends PureComponent {
 
     componentDidMount(){
         const { mode, data, checkNewLine, init, auditedNodes } = this.props;
-		this.editor = new MMEditor({ dom: this.editorRef, mode });
+		this.editor = new MMEditor({ dom: this.editorRef, mode, showBackGrid: false });
 		this.initEditorShape();
         if(checkNewLine){
             this.editor.graph.line.shapes["default"].checkNewLine = checkNewLine;

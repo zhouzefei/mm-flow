@@ -6,22 +6,6 @@
 | ToolBar  | 头部bar |
 | Command  | 头部操作项，撤销、回退、放大、缩小等 |
 | Flow | 中间面板 |
-| LineDetail | 线条详情面板 |
-| NodeDetail | 节点详情面板 |
-
-
-
-### Item参数
-|  参数   | 参考值 | 作用  |
-|  ----  | --- | ----  |
-|  type  | flow-start | 节点类型 |
-|  name  | 开始 | 节点名称 |
-| size | [50, 50]  |大小|
-| component |  audit | 节点详情加载的组件， 在Flow组件中传入具体的Component后续在Flow中会提及 |
-| isRoot | true | 是否为跟节点 |
-| nodeType | start | 节点类型,例如排他的场景type一样，所以需要通过nodeType区分排他开始、排他结束 |
-| config | {} | 节点相关的属性，即节点详情中右侧的表单内容相关的值 |
-
 
 
 ### Command参数
@@ -32,7 +16,7 @@
 |  zoom-in  | 放大 |
 |  zoom-out  | 缩小 |
 |  fullscreen  | 适应画布 |
-|  fullscreen-exit  | 世纪尺寸 |
+|  fullscreen-exit  | 实际尺寸 |
 |  自定义 {type:"",click:void 0}  | 其他按钮需要定义，注意type为antd中的Icon type |
 
 ```javascript
@@ -49,6 +33,16 @@
 />
 ```
 
+### Item参数
+|  参数   | 参考值 | 作用  |
+|  ----  | --- | ----  |
+|  type  | flow-start | 节点类型 |
+|  name  | 开始 | 节点名称 |
+| size | [50, 50]  |大小|
+| component |  audit | 节点详情加载的组件， 在Flow组件中传入具体的Component后续在Flow中会提及 |
+| isRoot | true | 是否为跟节点 |
+| nodeType | start | 节点类型,例如排他的场景type一样，所以需要通过nodeType区分排他开始、排他结束 |
+| config | {} | 节点相关的属性，即节点详情中右侧的表单内容相关的值 |
 
 
 
