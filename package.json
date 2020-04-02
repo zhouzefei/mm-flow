@@ -1,6 +1,6 @@
 {
   "name": "@tntd/mm-flow",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "./dist/MMFlow.js",
   "dependencies": {
     "@tntd/mm-editor": "^1.2.11",

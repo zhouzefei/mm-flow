@@ -52,8 +52,6 @@
 
 
 
-// animate={()=>{}}
-auditedNodes={auditedNodesData}
 ### Flow参数
 |  参数   | 参考值 | 作用  |
 |  ----  | --- | ----  |
