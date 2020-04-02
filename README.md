@@ -1,68 +1,74 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### 基于mm-flow的封装的工作流，暴露组件如下
+|  组件   | 作用  |
+|  ----  | ----  |
+| ItemPanel  | 左侧栏目 |
+| Item  | 左侧栏目子项 |
+| ToolBar  | 头部bar |
+| Command  | 头部操作项，撤销、回退、放大、缩小等 |
+| Flow | 中间面板 |
+| LineDetail | 线条详情面板 |
+| NodeDetail | 节点详情面板 |
 
-## Available Scripts
 
-In the project directory, you can run:
 
-### `yarn start`
+### Item参数
+|  参数   | 参考值 | 作用  |
+|  ----  | --- | ----  |
+|  type  | flow-start | 节点类型 |
+|  name  | 开始 | 节点名称 |
+| size | [50, 50]  |大小|
+| component |  audit | 节点详情加载的组件， 在Flow组件中传入具体的Component后续在Flow中会提及 |
+| isRoot | true | 是否为跟节点 |
+| nodeType | start | 节点类型,例如排他的场景type一样，所以需要通过nodeType区分排他开始、排他结束 |
+| config | {} | 节点相关的属性，即节点详情中右侧的表单内容相关的值 |
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
 
-### `yarn test`
+### Command参数
+|  参数   | 作用  |
+|  ----  |  ----  |
+|  redo  | 重做 |
+|  undo  | 撤销 |
+|  zoom-in  | 放大 |
+|  zoom-out  | 缩小 |
+|  fullscreen  | 适应画布 |
+|  fullscreen-exit  | 世纪尺寸 |
+|  自定义 {type:"",click:void 0}  | 其他按钮需要定义，注意type为antd中的Icon type |
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```javascript
+<Command 
+    types={
+        [
+            "redo","undo","zoom-in","zoom-out","fullscreen","fullscreen-exit",
+            {
+                type:"eye",
+                click:this.preview
+            }
+        ]
+    }
+/>
+```
 
-### `yarn build`
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+// animate={()=>{}}
+auditedNodes={auditedNodesData}
+### Flow参数
+|  参数   | 参考值 | 作用  |
+|  ----  | --- | ----  |
+|  checkNewLine  | void 0 | 判断节点之间是否可以链接，例如开始节点只能有输出节点 |
+|  data  | {} | 面板中节点线条的初始化数据 |
+| init | void 0  | 初始化flow的函数 |
+| lineNeedConfig |  `({line, fromNode})=>{}` | 判断线条是否需要展示配置面板 |
+| lineRed |  `({line, fromNode})=>{}` | 线条是否需要飘红 |
+| onNodeClick | `({ node, fromNodes})=>{}`  | 节点点击事件 |
+| onLineClick | `({line,fromNode,rightbarLine})=>{}` | 线条点击事件 |
+| onLineAdd | `({line})=>{}` | 连接线条之间的回调 |
+| click | void 0 | 点击面板空白事件 |
+| changeNode | `({node})=>{console.log(node)}` | 监听节点详情中变化事件 |
+| changeLine | `({line, fromNode}) => {}` | 监听线条详情中变化事件 |
+| nodeComponents | `{ "audit": Audit,"base": Base}` | 将节点详情的表单组件传入，与Item中component对应 |
+| lineComponents | `{"line": Line}` | 将线条详情的表单组件传入，与Item中component对应 |
+|auditedNodes|`{...node,"status":2}`|一般用于审批流查看模式。节点信息基础上加上节点状态是审核中，已成功，异常|
+|animate|void 0|自定义动画|

@@ -1,9 +1,9 @@
 {
-  "name": "mm-flow",
+  "name": "@tntd/mm-flow",
   "version": "0.1.1",
   "main": "./dist/MMFlow.js",
   "dependencies": {
-    "@tntd/mm-editor": "^1.2.10",
+    "@tntd/mm-editor": "^1.2.11",
     "antd": "^3.26.14",
     "dagre": "^0.8.5",
     "events": "^3.1.0",
@@ -13,7 +13,7 @@
   },
   "scripts": {
     "start": "webpack-dev-server",
-		"build": "webpack --config webpack.config.build.js"
+    "build": "webpack --config webpack.config.build.js"
   },
   "eslintConfig": {
     "extends": "eslint-config-tdued"
@@ -65,5 +65,5 @@
     "webpack-merge": "^4.2.2"
   },
   "author": "zefei",
-	"license": "ISC"
+  "license": "ISC"
 }
