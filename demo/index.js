@@ -1,7 +1,7 @@
 import { PureComponent, Fragment } from "react";
 import { Row, Button, message } from "antd";
 import { FLOW_ITEM } from "./ItemMap";
-import { Flow, ToolBar, ItemPanel, Item, Command } from "../src/MMFlow";
+import { Flow, ToolBar, ItemPanel, Item, Command } from "../dist/MMFlow";
 import Audit from "./FlowDetail/Audit";
 import Base from "./FlowDetail/Base";
 import Line from "./FlowDetail/Line";

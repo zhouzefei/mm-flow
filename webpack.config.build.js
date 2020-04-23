@@ -1,6 +1,5 @@
 const path = require("path");
 const webpack = require("webpack");
-const devMode = process.env.SYS_ENV !== "production";
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
@@ -17,10 +16,15 @@ module.exports = {
 	externals: {
 		"lodash": "lodash",
 		"snapsvg": "snapsvg",
-		"react": 'react'
+		"canvg": "canvg",
+		"dagre":"dagre",
+		"react": "react",
+		"react-dom":"react-dom",
+		"antd":"antd",
+		"classnames":"classnames"
 	},
 	optimization: {
-		minimize: false
+		minimize: true
 	},
 	module: {
 		rules: [
@@ -28,13 +32,21 @@ module.exports = {
 				test: /\.js$/,
 				exclude: /(node_modules)/,
 				use: {
-					loader: "babel-loader?cacheDirectory=true"
+					loader: "babel-loader?cacheDirectory=true",
+					options: {
+						presets: [["@babel/preset-env"], "@babel/preset-react"],
+						plugins: [
+							["@babel/plugin-proposal-decorators", { legacy: true }],
+							["@babel/plugin-proposal-class-properties", { loose: true }],
+							"@babel/plugin-transform-runtime"
+						]
+					}
 				}
 			},
 			{
 				test: /\.css$/,
 				use: [
-					devMode ? "style-loader" : MiniCssExtractPlugin.loader,
+					MiniCssExtractPlugin.loader,
 					"css-loader"
 				]
 			},

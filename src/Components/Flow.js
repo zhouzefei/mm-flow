@@ -385,6 +385,17 @@ export default class Flow extends PureComponent {
     }
     // 更新线状态
     updateRunningLine(line) {
+    	let angel = 0;
+    	if (line && line.arrow) {
+			angel = line.arrow.angle;
+			if (angel === 0) {
+    			angel += 180;
+    		}else if (angel === 90) {
+    			angel += 90;
+    		} else if (angel === 270) {
+    			angel -= 90;
+    		}
+    	}
     	let length = line.shape.getTotalLength();
     	if (!line.hasClass("running")) {
     		this.props.editor.graph.line.updateLine(line.data.uuid);
@@ -398,7 +409,7 @@ export default class Flow extends PureComponent {
     				const coord = line.shape.getPointAtLength(val);
     				const matrix = new window.Snap.Matrix();
     				matrix.translate(coord.x, coord.y);
-    				matrix.rotate(coord.alpha + line.arrow.angle + 90, 0, 0);
+    				matrix.rotate(coord.alpha + angel + 90, 0, 0);
     				line.arrow.attr({
     					transform: matrix.toTransformString()
     				});

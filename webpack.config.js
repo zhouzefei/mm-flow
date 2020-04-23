@@ -1,8 +1,10 @@
 const path = require("path");
 const webpack = require("webpack");
 const devMode = process.env.SYS_ENV !== "production";
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
+	mode:"development",
 	cache: true,
 	entry: {
 		app: "./index.js"
@@ -11,6 +13,7 @@ module.exports = {
 		filename: "index.js"
 	},
 	plugins: [
+		new webpack.HotModuleReplacementPlugin(),
 		new webpack.ProvidePlugin({
 			React: "react"
 		}),
@@ -30,22 +33,45 @@ module.exports = {
 				test: /\.js$/,
 				exclude: /(node_modules)|dist/,
 				use: {
-					loader: "babel-loader?cacheDirectory=true"
+					loader: "babel-loader?cacheDirectory=true",
+					options: {
+						presets: [["@babel/preset-env"], "@babel/preset-react"],
+						plugins: [
+							[
+								"@babel/plugin-proposal-decorators",
+								{ legacy: true }
+							],
+							[
+								"@babel/plugin-proposal-class-properties",
+								{ loose: true }
+							],
+							[
+								"import",
+								{
+									libraryName: "antd",
+									libraryDirectory: "lib",
+									style: true
+								}
+							],
+							"@babel/plugin-transform-runtime",
+						]
+					}
 				}
 			},
 			{
 				test: /\.css$/,
-				use: [devMode ? "style-loader" : MiniCssExtractPlugin.loader, "css-loader"]
+				use: ["style-loader", "css-loader"]
 			},
 			{
 				test: /\.less$/,
 				use: [
-					devMode ? "style-loader" : MiniCssExtractPlugin.loader,
+					{ loader: "style-loader" },
+					{ loader: "css-loader" },
 					{
-						loader: "css-loader"
-					},
-					{
-						loader: "less-loader"
+						loader: "less-loader",
+						options: {
+							javascriptEnabled: true
+						}
 					}
 				]
 			},
