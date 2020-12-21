@@ -1,4 +1,4 @@
-import { PureComponent, Fragment } from "react";
+import { PureComponent } from "react";
 import { Icon, Tooltip } from "antd";
 import dagre from "dagre";
 import { toolBarTypeNameMap } from "../Constants/toolBarTypeNameMap"
@@ -106,8 +106,8 @@ export default class Command extends PureComponent {
     getCommandChild = () => {
         let child = [];
         const { types = [] } = this.props;
-        types && 
-        types.length>0 && 
+        types &&
+        types.length>0 &&
         types.forEach(type=>{
 			let click = null
 			if(typeof type === "object"){

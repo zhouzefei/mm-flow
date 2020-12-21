@@ -1,7 +1,7 @@
-import { PureComponent, Fragment } from "react";
+import { PureComponent } from "react";
 import { Row, Button, message } from "antd";
-import { FLOW_ITEM } from "./ItemMap";
 import { Flow, ToolBar, ItemPanel, Item, Command } from "../dist/MMFlow";
+import { FLOW_ITEM } from "./ItemMap";
 import Audit from "./FlowDetail/Audit";
 import Base from "./FlowDetail/Base";
 import Line from "./FlowDetail/Line";
@@ -167,7 +167,7 @@ export default class Demo extends PureComponent{
         console.log(JSON.stringify(flowData))
     }
     init = () => {
-       
+
     }
     // 预览
     preview = () => {
@@ -186,23 +186,32 @@ export default class Demo extends PureComponent{
                 type="flex"
                 className="flow-editor-bd"
             >
-                
-                <ItemPanel editor={editor}>
+
+                <ItemPanel
+                    editor={editor}
+                    onDrop={()=>{console.log("zzf")}}
+                    onMove={(e)=>{
+                        return {
+                            pageX: e.pageX-document.documentElement.scrollLeft,
+                            pageY: e.pageY- document.documentElement.scrollTop
+                        }
+                    }}
+                >
                     {
-                        FLOW_ITEM && 
+                        FLOW_ITEM &&
                         FLOW_ITEM.length>0 &&
                         FLOW_ITEM.map(item=>{
                             return (
-                                <Item {...item} key={item.type} />
+                                <Item {...item} key={item.type}/>
                             )
                         })
                     }
                 </ItemPanel>
-               
+
                 <div className="flow-editor-content">
                     <Row type="flex" className="flow-editor-hd">
                         <ToolBar editor={editor}  style={{ type:"flex", justify:"space-between", align:"middle" }}>
-                            <Command 
+                            <Command
                                 types={
                                     ["redo","undo","zoom-in","zoom-out","fullscreen","fullscreen-exit",{
                                         type:"eye",
@@ -212,8 +221,8 @@ export default class Demo extends PureComponent{
                             />
                             <Button type="primary" onClick={this.save}>保存</Button>
                         </ToolBar>
-                    </Row> 
-                    <Flow 
+                    </Row>
+                    <Flow
                         ref = { (g) => this.editorRef = g }
                         checkNewLine={this.checkNewLine}
                         data={data}

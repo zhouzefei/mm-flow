@@ -21,7 +21,8 @@ module.exports = {
 		"react": "react",
 		"react-dom":"react-dom",
 		"antd":"antd",
-		"classnames":"classnames"
+		"classnames":"classnames",
+		"@tntd/mm-editor":"@tntd/mm-editor"
 	},
 	optimization: {
 		minimize: true

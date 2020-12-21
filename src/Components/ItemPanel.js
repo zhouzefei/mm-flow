@@ -11,21 +11,23 @@ export default class ItemPanel extends PureComponent {
 	// 生成新节点
 	onDrop = (item, e) => {
 		const {size = []} = item || {};
-		const { editor } = this.props;
+		const { editor, onDrop } = this.props;
 		const dom = editor.dom.node;
 		const name = item.name;
 		const transform = editor.paper.transform();
-		const info = transform.globalMatrix.split();
-		if (e.clientX - dom.offsetLeft < 0 || e.clientY - dom.offsetTop < 0) return;
-		const x = (e.clientX - dom.offsetLeft - info.dx) / info.scalex - (size[0] / 2) * info.scalex;
-		const y = (e.clientY - dom.offsetTop - info.dy) / info.scalex - (size[1] / 2) * info.scalex;
+        const info = transform.globalMatrix.split();
+        const { left, top } = dom && dom.getBoundingClientRect();
+		if (e.clientX - left < 0 || e.clientY - top < 0) return;
+		const x = (e.clientX - left - info.dx) / info.scalex - (size[0] / 2) * info.scalex;
+		const y = (e.clientY - top - info.dy) / info.scalex - (size[1] / 2) * info.scalex;
 		editor.graph.node.addNode(
 			Object.assign({}, JSON.parse(JSON.stringify(item)), {
 				name,
 				x,
 				y
 			})
-		);
+        );
+        onDrop && onDrop(item,e);
 	};
 
     onDrag(item) {
@@ -37,10 +39,17 @@ export default class ItemPanel extends PureComponent {
     }
 
     addEvents() {
+        const { onMove } = this.props;
     	const mousemove = e => {
+            let { pageX, pageY }=e;
+            if(onMove){
+                const moveP=onMove(e);
+                pageX = moveP.pageX;
+                pageY = moveP.pageY;
+            }
     		this.setState({
-    			pageX: e.pageX,
-    			pageY: e.pageY,
+    			pageX: pageX,
+    			pageY: pageY,
     			moving: true
     		});
     	};
@@ -60,7 +69,9 @@ export default class ItemPanel extends PureComponent {
     render() {
     	const { dragItem = {}, moving, pageX = 0, pageY = 0 } = this.state || {};
 		const {size = []} = dragItem || {};
-		const { disabled, children } = this.props
+        const { disabled, children, editor } = this.props
+        const transform = editor && editor.paper.transform();
+        const info = transform && transform.globalMatrix.split();
     	return (
     		<div className="flow-editor-sidebar">
 				{
@@ -69,14 +80,14 @@ export default class ItemPanel extends PureComponent {
     			}
     			<div
     				style={{
-    					left: dragItem.name ? pageX - size[0] / 2 : -9999,
-    					top: dragItem.name ? pageY - size[1] / 2 : -9999,
+    					left: dragItem.name ? pageX - (size[0] / 2) * info.scalex : -9999,
+    					top: dragItem.name ? pageY - (size[1] / 2) * info.scalex : -9999,
     					display: moving && dragItem.name ? "block" : "none"
     				}}
     				className={`${dragItem.type || ""} flow-item drag-item`}
     			>
     				{
-    					dragItem.image ? 
+    					dragItem.image ?
                             <img src={dragItem.image}/>
     						: dragItem.name
     				}
@@ -85,8 +96,8 @@ export default class ItemPanel extends PureComponent {
 					{
 						React.Children.map(children, (child) => {
 							return (
-								<div 
-									draggable={false} 
+								<div
+									draggable={false}
 									onMouseDown={() => {
 										this.onDrag(child.props);
 									}}
