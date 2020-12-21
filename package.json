@@ -1,6 +1,6 @@
 {
   "name": "@tntd/mm-flow",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "审批流",
   "main": "./dist/MMFlow.js",
   "scripts": {
